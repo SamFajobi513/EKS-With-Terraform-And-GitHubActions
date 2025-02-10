@@ -1,4 +1,5 @@
 resource "aws_eks_cluster" "example" {
+
   count    = var.is-eks-cluster-enabled == true ? 1 : 0
   name     = var.cluster-name
   role_arn = aws_iam_role.eks-cluster-role[count.index].arn
@@ -15,7 +16,12 @@ resource "aws_eks_cluster" "example" {
     endpoint_public_access  = var.endpoint-public-access
     security_group_ids      = [aws_security_group.eks-cluster-sg.id]
   }
- 
+
+  tags = {
+    Name = var.cluster-name
+    Env  = var.env
+  }
+
 
   # Ensure that IAM Role permissions are created before and deleted
   # after EKS Cluster handling. Otherwise, EKS will not be able to
@@ -23,3 +29,4 @@ resource "aws_eks_cluster" "example" {
   depends_on = [
     aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
   ]
+}
