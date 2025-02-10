@@ -5,11 +5,9 @@ resource "aws_eks_cluster" "example" {
   version  = var.cluster-version
 
   access_config {
-    authentication_mode = "API"
+    authentication_mode                         = "CONFIG_MAP"
+    bootstrap_cluster_creator_admin_permissions = true
   }
-
-  role_arn = aws_iam_role.example.arn
-  version  = "1.31"
 
   vpc_config {
     subnet_ids              = [aws_subnet.private-subnet[0].id, aws_subnet.private-subnet[1].id, aws_subnet.private-subnet[2].id]
